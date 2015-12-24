@@ -1,0 +1,19 @@
+{
+  "name": "computes",
+  "version": "1.0.0",
+  "description": "computes.io distributed computing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "chrismatthieu",
+  "license": "All Rights Reserved",
+  "dependencies": {
+    "big-integer": "^1.5.6",
+    "node-uuid": "~1.4.3",
+    "request": "^2.62.0",
+    "redis": "*",
+    "path": "*",
+    "util": "*"
+  }
+}
