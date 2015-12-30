@@ -11,9 +11,9 @@
   "dependencies": {
     "big-integer": "^1.5.6",
     "node-uuid": "~1.4.3",
-    "request": "^2.62.0",
-    "redis": "*",
     "path": "*",
+    "redis": "*",
+    "request": "^2.62.0",
     "util": "*"
   }
 }

@@ -1,0 +1,14 @@
+{
+	"options" : {
+		  "host": "localhost",
+		  "port":"9000"
+	},
+  "redis" : {
+		  "host": "tetra.redistogo.com",
+		  "port":"9447",
+      "password": "3d4384d62c0d021388fe78192f0d8efa"
+	},
+  "auth":{
+		"kazi-token":"YOUR-SECRET-TOKEN"
+	}
+}
