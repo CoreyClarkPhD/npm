@@ -16,3 +16,5 @@ computes.on("result", function (job, result){
   console.log(result);
 });
 ```
+
+Note: operation can also be a URL such as a raw gist i.e. [https://gist.githubusercontent.com/computes/df86808c4a9d0a0d489a/raw/11c92b86662a4df5b5db585a1442796333bd1934/test.js](https://gist.githubusercontent.com/computes/df86808c4a9d0a0d489a/raw/11c92b86662a4df5b5db585a1442796333bd1934/test.js)

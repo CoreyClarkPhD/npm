@@ -19,59 +19,60 @@ var clientRedisToGo = redis.createClient(config.redis.port,
                             config.redis.host,
                             {no_ready_check: true});
 
-// clientRedisToGo.auth(config.redis.user, function() {
-//   console.log('Redis connected');
-// });
-
 clientRedisToGo.on("error", function (err) {
-  console.log("Redis error encountered", err);
+  console.log("error encountered", err);
 });
 
 clientRedisToGo.on("end", function() {
-  console.log("Redis connection closed");
+  console.log("> disconnected");
 });
-
-// clientRedisToGo.on('message', function (job, result) {
-//   console.log('message received:', job, result);
-// 	controller.emit( "result", result );
-// });
 
 var jobsReceived = [];
 var initiated = false;
 
-function compute(operation, data){
+var Job = function(){};
+util.inherits( Job, EventEmitter );
 
-  EventEmitter.call(this);
-  computesEmitter = this;
+function connect(){
+  var job =  new Job();
+  clientRedisToGo.auth(config.redis.password, function() {
+    console.log('> connected');
+    job.emit("ready");
+  });
+  return job;
+}
 
-  if (initiated == false){
-    initiated = true;
-    console.log('connecting to computes...')
-    clientRedisToGo.auth(config.redis.password, function() {
-      console.log('connected!');
-      computesEmitter.emit("ready");
-    });
-  };
+Job.prototype.cancel = function(){};
+
+Job.prototype.close = function(){
+  clientRedisToGo.quit();
+};
+
+Job.prototype.compute = function compute(operation, data){
+
+  var self = this;
 
   clientRedisToGo.on('message', function (job, data) {
 
     if (jobsReceived.indexOf(job) == -1){
       jobsReceived.push(job);
 
+      clientRedisToGo.unsubscribe(job);
+      // console.log('unsubscribed from', job);
+
       result = JSON.parse(data)
       var results = {
         job: job,
         result: result.result
       }
-    	computesEmitter.emit( "result", results );
+    	self.emit( "result", results );
     }
 
   });
 
-
   var jobid = 'computes:' + uuid.v1();
 	clientRedisToGo.subscribe(jobid);
-	console.log('subscribed to', jobid)
+	// console.log('subscribed to', jobid)
 
   var payload={
     client: { "name": "job-creator" },
@@ -90,7 +91,8 @@ function compute(operation, data){
 		return body;
 	});
 
-};
+}
 
-util.inherits( compute, EventEmitter );
-module.exports = compute;
+module.exports = {
+  connect: connect
+}
