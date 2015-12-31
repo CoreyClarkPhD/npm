@@ -1,4 +1,4 @@
-# Computes.io NPM Module
+# Computes NPM Module
 
 This example computes 9000! across 3 cores.
 
