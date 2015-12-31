@@ -44,7 +44,7 @@ function connect(){
 
 Job.prototype.cancel = function(){};
 
-Job.prototype.close = function(){
+Job.prototype.disconnect = function(){
   clientRedisToGo.quit();
 };
 
