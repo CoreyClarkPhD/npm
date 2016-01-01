@@ -32,7 +32,7 @@ Note: operation can also be a URL such as a raw gist i.e. [https://gist.githubus
 API commands include:
 
 - connect
-- compute
 - disconnect
+- compute
 - execute
 - cancel
