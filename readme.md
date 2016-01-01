@@ -20,7 +20,6 @@ var jobCount = 0
 job.on("result", function (result){
   jobCount++;
   console.log(result);
-  // if found then job.cancel(job);
   if (jobCount == 3){
     job.disconnect();
   }
