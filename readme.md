@@ -34,8 +34,8 @@ API commands include:
 - connect
 - compute
 - disconnect
+- execute
 
 coming soon...
 
 - cancel
-- execute

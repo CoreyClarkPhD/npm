@@ -6,7 +6,6 @@
 //   }
 // }
 
-// http://blog.teamtreehouse.com/build-npm-package
 var config = require('./config.json');
 var bigInt = require('big-integer');
 var request=require('request');
@@ -27,18 +26,49 @@ clientRedisToGo.on("end", function() {
   console.log("> disconnected");
 });
 
-var jobsReceived = [];
-var initiated = false;
-
 var Job = function(){};
 util.inherits( Job, EventEmitter );
 
+var jobsReceived = [];
+
+function submitJob(payload){
+  var post={
+		url: util.format('http://%s:%s/jobs/compute',config.options.host,config.options.port),
+		form: payload,
+		headers:config.auth
+	}
+
+	request.post(post, function(err,httpResponse,body){
+		return body;
+	});
+}
+
 function connect(){
   var job =  new Job();
+
   clientRedisToGo.auth(config.redis.password, function() {
     console.log('> connected');
     job.emit("ready");
   });
+
+  clientRedisToGo.on('message', function (jobx, data) {
+
+    if (jobsReceived.indexOf(jobx) == -1){
+      jobsReceived.push(jobx);
+
+      clientRedisToGo.unsubscribe(jobx);
+      // console.log('unsubscribed from', job);
+
+      result = JSON.parse(data)
+      var results = {
+        job: jobx,
+        result: result.result
+      }
+
+      job.emit( "result", results );
+    }
+  });
+
   return job;
 }
 
@@ -49,26 +79,6 @@ Job.prototype.disconnect = function(){
 };
 
 Job.prototype.compute = function compute(operation, data){
-
-  var self = this;
-
-  clientRedisToGo.on('message', function (job, data) {
-
-    if (jobsReceived.indexOf(job) == -1){
-      jobsReceived.push(job);
-
-      clientRedisToGo.unsubscribe(job);
-      // console.log('unsubscribed from', job);
-
-      result = JSON.parse(data)
-      var results = {
-        job: job,
-        result: result.result
-      }
-    	self.emit( "result", results );
-    }
-
-  });
 
   var jobid = 'computes:' + uuid.v1();
 	clientRedisToGo.subscribe(jobid);
@@ -81,15 +91,23 @@ Job.prototype.compute = function compute(operation, data){
     data: data
   };
 
-	var post={
-		url: util.format('http://%s:%s/jobs/compute',config.options.host,config.options.port),
-		form: payload,
-		headers:config.auth
-	}
+  submitJob(payload);
 
-	request.post(post, function(err,httpResponse,body){
-		return body;
-	});
+}
+
+Job.prototype.execute = function execute(command){
+
+  var jobid = 'computes:' + uuid.v1();
+	clientRedisToGo.subscribe(jobid);
+	// console.log('subscribed to', jobid)
+
+  var payload={
+    client: { "name": "job-creator" },
+		jobid: jobid,
+    command: command
+  };
+
+  submitJob(payload);
 
 }
 
