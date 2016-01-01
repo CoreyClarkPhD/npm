@@ -31,9 +31,9 @@ util.inherits( Job, EventEmitter );
 
 var jobsReceived = [];
 
-function submitJob(payload){
+function submitJob(endpoint, payload){
   var post={
-		url: util.format('http://%s:%s/jobs/compute',config.options.host,config.options.port),
+		url: util.format('http://%s:%s/jobs/' + endpoint,config.options.host,config.options.port),
 		form: payload,
 		headers:config.auth
 	}
@@ -91,7 +91,7 @@ Job.prototype.compute = function compute(operation, data){
     data: data
   };
 
-  submitJob(payload);
+  submitJob('compute', payload);
 
 }
 
@@ -107,7 +107,18 @@ Job.prototype.execute = function execute(command){
     command: command
   };
 
-  submitJob(payload);
+  submitJob('compute', payload);
+
+}
+
+Job.prototype.cancel = function cancel(job){
+
+  var payload={
+    client:{ "name": "job-creator" },
+    jobs: [job] 
+  };
+
+  submitJob('killJobs', payload);
 
 }
 
