@@ -78,7 +78,7 @@ Job.prototype.disconnect = function(){
   clientRedisToGo.quit();
 };
 
-Job.prototype.compute = function compute(operation, data){
+Job.prototype.compute = function compute(operation, data, options){
 
   var jobid = 'computes:' + uuid.v1();
 	clientRedisToGo.subscribe(jobid);
@@ -88,14 +88,15 @@ Job.prototype.compute = function compute(operation, data){
     client: { "name": "job-creator" },
 		jobid: jobid,
     operation: operation,
-    data: data
+    data: data,
+    options: options
   };
 
   submitJob('compute', payload);
 
 }
 
-Job.prototype.execute = function execute(command){
+Job.prototype.execute = function execute(command, options){
 
   var jobid = 'computes:' + uuid.v1();
 	clientRedisToGo.subscribe(jobid);
@@ -104,7 +105,8 @@ Job.prototype.execute = function execute(command){
   var payload={
     client: { "name": "job-creator" },
 		jobid: jobid,
-    command: command
+    command: command,
+    options: options
   };
 
   submitJob('compute', payload);
@@ -115,7 +117,7 @@ Job.prototype.cancel = function cancel(job){
 
   var payload={
     client:{ "name": "job-creator" },
-    jobs: [job] 
+    jobs: [job]
   };
 
   submitJob('killJobs', payload);
