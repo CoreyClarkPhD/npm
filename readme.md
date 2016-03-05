@@ -1,3 +1,4 @@
+
 # Computes NPM Module
 
 This example computes 9000! across 3 cores.
@@ -11,7 +12,7 @@ var operation = "(function(data) { var result=1;for (var i = data*3000+1; i <= d
 // var operation = "https://gist.githubusercontent.com/computes/df86808c4a9d0a0d489a/raw/11c92b86662a4df5b5db585a1442796333bd1934/test.js";
 
 var options = {
-  domain: "computes",
+  domain: {domain_key_from_computes.io},
   priority: "normal",  //'low', 'normal' & 'high'
   ttl: 60000,  // milliseconds
   delay: 0 //milliseconds

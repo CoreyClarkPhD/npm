@@ -1,5 +1,5 @@
 {
-  "name": "@chrismatthieu/computes",
+  "name": "computes",
   "version": "1.0.1",
   "description": "computes.io distributed computing",
   "main": "index.js",
