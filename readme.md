@@ -4,7 +4,7 @@
 This example computes 9000! across 3 cores.
 
 ```javascript
-var computes = require("@chrismatthieu/computes");
+var computes = require("computes");
 var bigInt = require("big-integer");
 
 var operation = "(function(data) { var result=1;for (var i = data*3000+1; i <= data*3000+3000; ++i){result = bigInt(result).multiply(i).toString();}return result; })";
