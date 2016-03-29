@@ -58,6 +58,7 @@ function connect(){
 
       clientRedisToGo.unsubscribe(jobx);
       // console.log('unsubscribed from', job);
+      // clientRedisToGo.del(jobx);
 
       result = JSON.parse(data)
       var results = {
