@@ -14,6 +14,7 @@
     "path": "*",
     "redis": "*",
     "request": "^2.62.0",
+    "socket.io-client": "^1.4.5",
     "util": "*"
   },
   "devDependencies": {},

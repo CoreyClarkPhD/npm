@@ -12,7 +12,7 @@ var request=require('request');
 var util=require('util');
 var uuid = require('node-uuid');
 var EventEmitter = require( "events" ).EventEmitter;
-
+var io = require('socket.io-client');
 var redis = require('redis');
 var clientRedisToGo = redis.createClient(config.redis.port,
                             config.redis.host,
@@ -43,8 +43,24 @@ function submitJob(endpoint, payload){
 	});
 }
 
-function connect(){
+function connect(domainKey){
   var job =  new Job();
+
+  // Connect to supercomputer via websockets
+  var socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
+
+  socket.on('connect', function () {
+
+    if (domainKey){
+      socket.emit('storeClientInfo', { customId: domainKey });  
+    }
+
+    socket.on('message', function (msg) {
+      console.log('Message received: ', msg);
+      job.emit("message", msg);
+    });
+
+  });
 
   clientRedisToGo.auth(config.redis.password, function() {
     console.log('> connected');

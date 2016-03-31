@@ -18,7 +18,7 @@ var options = {
   delay: 0 //milliseconds
 };
 
-var job = computes.connect();
+var job = computes.connect(options.domain);
 
 job.on("ready", function (){
   for(var data = 0; data < 3; data++) {
@@ -34,6 +34,11 @@ job.on("result", function (result){
     job.disconnect();
   }
 });
+
+job.on("message", function (message){
+  console.log(message);
+});
+
 ```
 
 Notes:
@@ -48,3 +53,4 @@ API commands include:
 - compute
 - execute
 - cancel
+- message
