@@ -26,17 +26,6 @@ clientRedisToGo.on("end", function() {
   console.log("> disconnected");
 });
 
-// Connect to supercomputer via websockets
-var socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
-socket.on('connect', function () {
-  socket.on('message', function (msg) {
-    // console.log('Message received: ', msg);
-    job.emit("message", msg);
-  });
-
-});
-
-
 var Job = function(){};
 util.inherits( Job, EventEmitter );
 
@@ -57,9 +46,21 @@ function submitJob(endpoint, payload){
 function connect(domainKey){
   var job =  new Job();
   console.log("domain", domainKey);
-  if (domainKey){
-    socket.emit('storeClientInfo', { customId: domainKey });
-  }
+
+  // Connect to supercomputer via websockets
+  var socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
+  socket.on('connect', function () {
+
+    if (domainKey){
+      socket.emit('storeClientInfo', { customId: domainKey });
+    }
+
+    socket.on('message', function (msg) {
+      // console.log('Message received: ', msg);
+      job.emit("message", msg);
+    });
+
+  });
 
   clientRedisToGo.auth(config.redis.password, function() {
     job.emit("ready");
