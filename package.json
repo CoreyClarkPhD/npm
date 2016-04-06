@@ -1,6 +1,6 @@
 {
   "name": "computes",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "computes.io distributed computing",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "license": "LicenseRef-LICENSE",
   "dependencies": {
     "big-integer": "^1.5.6",
+    "firebase": "^2.4.2",
     "node-uuid": "~1.4.3",
     "path": "*",
     "redis": "*",

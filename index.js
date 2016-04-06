@@ -13,6 +13,7 @@ var util=require('util');
 var uuid = require('node-uuid');
 var EventEmitter = require( "events" ).EventEmitter;
 var io = require('socket.io-client');
+var Firebase = require("firebase");
 var redis = require('redis');
 var clientRedisToGo = redis.createClient(config.redis.port,
                             config.redis.host,
@@ -30,6 +31,7 @@ var Job = function(){};
 util.inherits( Job, EventEmitter );
 
 var jobsReceived = [];
+var memory;
 
 function submitJob(endpoint, payload){
   var post={
@@ -47,6 +49,8 @@ function connect(domainKey){
   var job =  new Job();
   console.log("domain", domainKey);
 
+  memory = new Firebase("https://cloudram.firebaseio.com/" + domainKey);
+
   // Connect to supercomputer via websockets
   var socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
   socket.on('connect', function () {
@@ -58,6 +62,11 @@ function connect(domainKey){
     socket.on('message', function (msg) {
       // console.log('Message received: ', msg);
       job.emit("message", msg);
+    });
+
+    memory.on('value', function(ram) {
+      // console.log(ram.val());
+      job.emit("memory", ram.val());
     });
 
   });
@@ -93,6 +102,10 @@ Job.prototype.cancel = function(){};
 Job.prototype.disconnect = function(){
   clientRedisToGo.quit();
   socket.close();
+};
+
+Job.prototype.memory = function(ram){
+  memory.set(ram);
 };
 
 Job.prototype.compute = function compute(operation, data, options){
