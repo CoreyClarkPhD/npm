@@ -1,6 +1,6 @@
 {
   "name": "computes",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "computes.io distributed computing",
   "main": "index.js",
   "scripts": {

@@ -48,7 +48,7 @@ function submitJob(endpoint, payload){
 
 function connect(domainKey){
   var job =  new Job();
-  console.log("domain", domainKey);
+  // console.log("domain", domainKey);
 
   memory = new Firebase("https://cloudram.firebaseio.com/" + domainKey);
 
