@@ -32,6 +32,7 @@ util.inherits( Job, EventEmitter );
 
 var jobsReceived = [];
 var memory;
+var socket;
 
 function submitJob(endpoint, payload){
   var post={
@@ -52,7 +53,7 @@ function connect(domainKey){
   memory = new Firebase("https://cloudram.firebaseio.com/" + domainKey);
 
   // Connect to supercomputer via websockets
-  var socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
+  socket = io.connect('http://'+config.options.host+':'+config.options.port, {reconnect: true});
   socket.on('connect', function () {
 
     if (domainKey){
@@ -102,6 +103,11 @@ Job.prototype.cancel = function(){};
 Job.prototype.disconnect = function(){
   clientRedisToGo.quit();
   socket.close();
+  // memory.goOffline();
+  // process.exit();
+  // memory.unauth();
+  // Firebase.goOffline();
+  // NO WAY TO END FIREBASE CONNECTION - CAUSING PROCESS TO REMAIN RUNNING
 };
 
 Job.prototype.memory = function(ram){
