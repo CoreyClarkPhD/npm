@@ -1,6 +1,6 @@
 {
   "name": "computes",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "computes.io distributed computing",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,8 @@
     "redis": "*",
     "request": "^2.62.0",
     "socket.io-client": "^1.4.5",
-    "util": "*"
+    "util": "*",
+    "hiredis": "*"
   },
   "devDependencies": {},
   "repository": {
